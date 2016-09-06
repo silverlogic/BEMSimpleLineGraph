@@ -421,7 +421,9 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
     // Set the Y-Axis Offset if the Y-Axis is enabled. The offset is relative to the size of the longest label on the Y-Axis.
     if (self.enableYAxisLabel) {
         NSDictionary *attributes = @{NSFontAttributeName: self.labelFont};
-        if (self.autoScaleYAxis == YES){
+        if (self.showYAxisLabelOnGraph) {
+            self.YAxisLabelXOffset = 0;
+        } else if (self.autoScaleYAxis == YES) {
             NSString *maxValueString = [NSString stringWithFormat:self.formatStringForValues, self.maxValue];
             NSString *minValueString = [NSString stringWithFormat:self.formatStringForValues, self.minValue];
             
@@ -973,8 +975,20 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
             labelYAxis.font = self.labelFont;
             labelYAxis.textColor = self.colorYaxisLabel;
             labelYAxis.backgroundColor = [UIColor clearColor];
+            labelYAxis.layer.cornerRadius = MIN(labelYAxis.frame.size.width/2, labelYAxis.frame.size.height/2);
+            labelYAxis.clipsToBounds = YES;
             labelYAxis.tag = LabelYAxisTag2000;
             labelYAxis.center = CGPointMake(xValueForCenterLabelYAxis, yAxisPosition);
+            
+            CGFloat padding = 3.0f;
+            UIView *labelBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(1 + labelYAxis.frame.origin.x - padding, labelYAxis.frame.origin.y - padding/2, labelYAxis.frame.size.width + 2*padding, labelYAxis.frame.size.height + padding)];
+            UIColor *labelBackgroundColor = self.colorBackgroundPopUplabel;
+            labelBackgroundView.backgroundColor = self.showYAxisLabelOnGraph ? labelBackgroundColor : [UIColor clearColor];
+            labelBackgroundView.alpha = 0.7f;
+            labelBackgroundView.layer.cornerRadius = MIN(labelBackgroundView.frame.size.width/2, labelBackgroundView.frame.size.height/2);
+            labelBackgroundView.clipsToBounds = YES;
+            [self addSubview:labelBackgroundView];
+            
             [self addSubview:labelYAxis];
             [yAxisLabels addObject:labelYAxis];
             
