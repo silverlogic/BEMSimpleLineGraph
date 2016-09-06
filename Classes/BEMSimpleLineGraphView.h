@@ -358,6 +358,10 @@ IB_DESIGNABLE @interface BEMSimpleLineGraphView : UIView <UIGestureRecognizerDel
 @property (nonatomic) BOOL displayDotsOnly;
 
 
+// When set to NO, y axis labels will be hidden
+@property (assign, nonatomic) BOOL showYAxisLabelOnGraph;
+
+
 @end
 
 
